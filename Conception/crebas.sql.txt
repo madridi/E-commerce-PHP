@@ -1,0 +1,126 @@
+/*==============================================================*/
+/* Nom de SGBD :  MySQL 5.0                                     */
+/* Date de création :  2/24/2016 12:20:37 AM                    */
+/*==============================================================*/
+
+
+drop table if exists Administrateur;
+
+drop table if exists Categorie;
+
+drop table if exists Client;
+
+drop table if exists Commande;
+
+drop table if exists Fournisseur;
+
+drop table if exists Produit;
+
+drop table if exists ligneCommande;
+
+/*==============================================================*/
+/* Table : Administrateur                                       */
+/*==============================================================*/
+create table Administrateur
+(
+   idAdmin              int not null AUTO_INCREMENT,
+   login                varchar(254),
+   mdp                  varchar(254),
+   primary key (idAdmin)
+);
+
+/*==============================================================*/
+/* Table : Categorie                                            */
+/*==============================================================*/
+create table Categorie
+(
+   idCategorie          int not null AUTO_INCREMENT,
+   nomCategorie         varchar(254),
+   description          varchar(254),
+   primary key (idCategorie)
+);
+
+/*==============================================================*/
+/* Table : Client                                               */
+/*==============================================================*/
+create table Client
+(
+   idClient             int not null AUTO_INCREMENT,
+   login                varchar(254),
+   mdp                  varchar(254),
+   nom                  varchar(254),
+   prenom               varchar(254),
+   email                varchar(254),
+   adresse              varchar(254),
+   telephone            int,
+   primary key (idClient)
+);
+
+/*==============================================================*/
+/* Table : Commande                                             */
+/*==============================================================*/
+create table Commande
+(
+   idCommande           int not null AUTO_INCREMENT,
+   idClient             int not null,
+   dateCommande         datetime,
+   primary key (idCommande)
+);
+
+/*==============================================================*/
+/* Table : Fournisseur                                          */
+/*==============================================================*/
+create table Fournisseur
+(
+   idFournisseur        int not null AUTO_INCREMENT,
+   nom                  varchar(254),
+   adresse              varchar(254),
+   mail                 varchar(254),
+   primary key (idFournisseur)
+);
+
+/*==============================================================*/
+/* Table : Produit                                              */
+/*==============================================================*/
+create table Produit
+(
+   IdProduit            int not null AUTO_INCREMENT,
+   idCategorie          int not null,
+   idFournisseur        int not null,
+   nom                  int,
+   description          varchar(254),
+   photo                varchar(254),
+   quantite             int,
+   prix                 float,
+   dateAjout         datetime,
+   etat              varchar(4) check (value in('hot','promo','new')),
+   primary key (IdProduit)
+);
+
+/*==============================================================*/
+/* Table : ligneCommandez                                       */
+/*==============================================================*/
+create table ligneCommande
+(
+   idCommande           int not null,
+   idLigne              int not null  AUTO_INCREMENT,
+   IdProduit            int not null,
+   quantite             int,
+   primary key (idLigne)
+);
+
+alter table Commande add constraint FK_Association_1 foreign key (idClient)
+      references Client (idClient) on delete restrict on update restrict;
+
+alter table Produit add constraint FK_Association_4 foreign key (idCategorie)
+      references Categorie (idCategorie) on delete restrict on update restrict;
+
+alter table Produit add constraint FK_Association_7 foreign key (idFournisseur)
+      references Fournisseur (idFournisseur) on delete restrict on update restrict;
+
+alter table ligneCommande add constraint FK_Association_2 foreign key (idCommande)
+      references Commande (idCommande) on delete restrict on update restrict;
+
+alter table ligneCommande add constraint FK_Association_3 foreign key (IdProduit)
+      references Produit (IdProduit) on delete restrict on update restrict;
+
